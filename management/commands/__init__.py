@@ -1,4 +1,6 @@
-import os, subprocess, sys
+import os
+import subprocess
+import sys
 
 from optparse import make_option
 from django.core.management import base
@@ -11,12 +13,12 @@ def _convert_testacular_start_help_options():
     options_start = testacular_help_text.index('Options:') + 1
 
     return [
-    make_option(line.pop(0), help=' '.join(line),
-                # Show value=VALUE in the help for options that need a value associated with them.
-                action='store' if line[0] in ['<integer>', 'List', '<disable'] else 'store_true'
-    )
-    for line in [line.split() for line in testacular_help_text[options_start:] if line]
-    if line[0] not in ('--version', '--help')  # don't use these, as they are already present
+        make_option(line.pop(0), help=' '.join(line),
+                    # Show value=VALUE in the help for options that need a value associated with them.
+                    action='store' if line[0] in ['<integer>', 'List', '<disable'] else 'store_true'
+        )
+        for line in [line.split() for line in testacular_help_text[options_start:] if line]
+        if line[0] not in ('--version', '--help')  # don't use these, as they are already present
     ]
 
 
@@ -31,11 +33,9 @@ class TestacularStartCommand(base.BaseCommand):
         """
         Override the default run_from_argv because we just want to pass the command line args to Testacular.
         """
-        stdout = base.OutputWrapper(sys.stdout)
-
-        stdout.write("\n")
-        stdout.write("Starting Testacular Server (http://vojtajina.github.com/testacular)\n")
-        stdout.write("-------------------------------------------------------------------\n")
+        sys.stdout.write("\n")
+        sys.stdout.write("Starting Testacular Server (http://vojtajina.github.com/testacular)\n")
+        sys.stdout.write("-------------------------------------------------------------------\n")
 
         # Move up two directories to the root of the djangular app
         root_app_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
