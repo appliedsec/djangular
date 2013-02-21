@@ -7,7 +7,6 @@ var djangular = angular.module('djangular', ['ngCookies']).
         'USER_NAME': '{{ user.username|escapejs }}',
         'IS_AUTHENTICATED': 'True' === '{{ user.is_authenticated|escapejs }}'
     }).
-// {% verbatim %}
     filter('django', ['DjangoProperties', function(DjangoProperties) {
         return function(text) {
             for (var constant in DjangoProperties) {
@@ -48,4 +47,3 @@ djangular.
         // now assign the $httpProvider the cookie which Django assigns...
         djangular.$httpProvider.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
     }]);
-// {% endverbatim %}
