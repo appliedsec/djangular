@@ -20,12 +20,6 @@ Requirements
 Configuration Changes Needed for Djangular
 ------------------------------------------
 
-+ As soon as you install Djangular inside a project, you will need to run the `makeangularsite` command to properly
-  setup Testacular into your default site directory.  Note that you may need to edit these configuration files to load
-  any additional javascript libraries.
-
-        python manage.py makeangularsite
-
 + Djangular needs to be placed as an app inside a Django project and added to the INSTALLED_APPS setting.  Also, the
   staticfiles contrib library will need to be included if it isn't.
 
@@ -35,6 +29,13 @@ Configuration Changes Needed for Djangular
             'djangular',
             ...
         )
+
++ After you install Djangular inside a project, you will need to run the `makeangularsite` command to properly setup
+  Testacular into your default site directory.
+
+        python manage.py makeangularsite
+
+    * Note: You may need to edit these configuration files to load any additional javascript libraries.
 
 + The STATICFILES_FINDERS needs to be updated to include `djangular.finders.NamespacedAngularAppDirectoriesFinder`.
 
