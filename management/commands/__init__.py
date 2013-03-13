@@ -3,7 +3,8 @@ import subprocess
 import sys
 
 from optparse import make_option
-from django.core.management import base
+from django.core import management as mgmt
+
 
 def _convert_testacular_start_help_options():
     """
@@ -22,7 +23,12 @@ def _convert_testacular_start_help_options():
     ]
 
 
-class TestacularStartCommand(base.BaseCommand):
+class DefaultSiteMixin(object):
+    def _get_default_site(self):
+        return os.environ["DJANGO_SETTINGS_MODULE"].replace('.settings', '')
+
+
+class TestacularStartCommand(DefaultSiteMixin, mgmt.base.BaseCommand):
     """
     A base command that calls testacular from the command line, passing the options and arguments directly.
     """
@@ -33,13 +39,20 @@ class TestacularStartCommand(base.BaseCommand):
         """
         Override the default run_from_argv because we just want to pass the command line args to Testacular.
         """
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        # Move up three directories (from the current file) to the root of the project
+        for _ in range(3):
+            current_path = os.path.dirname(current_path)
+        config_file = os.path.join(current_path, self._get_default_site(), self.testacular_config_file)
+
+        if not os.path.exists(config_file):
+            sys.stderr.write("Error: %s not found.  Please run:\n" % config_file)
+            sys.stderr.write("  python manage.py makeangularsite\n")
+            sys.exit(1)
+
         sys.stdout.write("\n")
         sys.stdout.write("Starting Testacular Server (http://vojtajina.github.com/testacular)\n")
         sys.stdout.write("-------------------------------------------------------------------\n")
-
-        # Move up two directories to the root of the djangular app
-        root_app_path = os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-        config_file = os.path.join(root_app_path, 'config', self.testacular_config_file)
 
         # Add testacular command and use argv from the command line
         args = ['testacular', 'start', config_file]

@@ -5,7 +5,7 @@ A reusable app that provides better app integration with Angular.  Djangular all
 app, instead of creating a single massive Angular application inside of Django.  This allows you to selectively use
 apps per site, as well as create a consistent structure across all of your Django apps.
 
-This is intended to be a Django version of the Angular Seed project (https://github.com/angular/angular-seed).  The
+This is intended to be a Django version of the Angular-Seed project (https://github.com/angular/angular-seed).  The
 current mindset is to limit the amount of changes introduced by Djangular.
 
 
@@ -14,11 +14,17 @@ Requirements
 
 + Local installs of Node.js and Testacular for testing.
 + Currently requires Python 2.7.
-+ Required Django 1.4 or 1.5.
++ Requires Django 1.4 or 1.5.
 
 
 Configuration Changes Needed for Djangular
 ------------------------------------------
+
++ As soon as you install Djangular inside a project, you will need to run the `makeangularsite` command to properly
+  setup Testacular into your default site directory.  Note that you may need to edit these configuration files to load
+  any additional javascript libraries.
+
+        python manage.py makeangularsite
 
 + Djangular needs to be placed as an app inside a Django project and added to the INSTALLED_APPS setting.  Also, the
   staticfiles contrib library will need to be included if it isn't.
@@ -79,11 +85,13 @@ Comparison between Djangular and Angular-Seed
 + The `lib/` directory (containing the AngularJS code) has been moved to the static folder of the Djangular app.  This
   will use the normal Django static urls: `{{ STATIC URL }}/lib/angular/angular.js`
 
-+ The overall `config/` directory is placed inside of the Djangular app itself.  Each Django app doesn't need it's own
-  Angular config.
++ The `config/` directory is now placed inside of your default Django site.  Each individual Django app doesn't need
+  its own AngularJS or testacular config.
 
-+ The overall `scripts/` directory has been moved to the `management/` directory.  Scripts have been made into Django
-  commands.  Django commands have been created instead of using the Angular Seed scripts.
++ The `scripts/` directory has removed, because the Angular-Seed scripts have been made into Django commands.  These
+  commands exist in the standard `management/` directory.
+    * `makeangularsite` places the Angular-Seed configuration inside the given Django Site directory.  This should be
+      run after installing Djangular.
     * `runtestserver` runs a local Django Web Server configured to support running all e2e tests.
     * `startangularapp` creates a Django app with the Angular structure.
     * `testngunit` runs the Testacular Server for all of the unit tests.
@@ -103,8 +111,8 @@ standard Angular filtering rules.  The URL for this JavaScript is `/djangular/ap
 Roadmap
 -------
 
-+ There are several configuration files that are meant to be editable inside the app.  While this is convenient for
-  customization, it causes issues with packaging and upgrading djangular that need to be addressed.
++ Allow testacular configuration files to be placed inside other sites or directories than just the default.
++ Modify project to use standard python packaging, so this can be installed via pip.
 + Allow single app testing for testacular unit and e2e tests.
 + Auto-detection of node and testacular installs.
 + Providing additional synchronization between Django models and Angular's $resource.  This includes removing the patch

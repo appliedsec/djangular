@@ -1,4 +1,4 @@
-basePath = '../../';
+basePath = '../';
 
 files = [
   JASMINE,
@@ -7,8 +7,13 @@ files = [
   'djangular/static/lib/angular/angular-*.js',
   'djangular/tests/lib/angular/angular-mocks.js',
   'djangular/templates/app.js',
-  '*/app/js/**/*.js',
-  '*/tests/unit/**/*.js'
+  '**/app/js/**/*.js',
+  '**/tests/unit/**/*.js'
+];
+
+excludes = [
+  'djangular/config/angularapp_template/app/js/*.js',
+  'djangular/config/angularapp_template/tests/unit/*.js'
 ];
 
 autoWatch = true;

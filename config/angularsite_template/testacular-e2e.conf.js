@@ -3,7 +3,11 @@ basePath = '../../';
 files = [
   ANGULAR_SCENARIO,
   ANGULAR_SCENARIO_ADAPTER,
-  '*/tests/e2e/**/*.js'
+  '**/tests/e2e/**/*.js'
+];
+
+excludes = [
+  'djangular/config/angularapp_template/tests/e2e/*.js'
 ];
 
 autoWatch = false;
