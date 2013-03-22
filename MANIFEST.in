@@ -1,0 +1,3 @@
+recursive-include djangular *
+include LICENSE
+include README.md

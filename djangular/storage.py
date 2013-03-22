@@ -1,5 +1,6 @@
 from django.contrib.staticfiles.storage import AppStaticStorage
 
+
 class NamespacedAngularAppStorage(AppStaticStorage):
     """
     A file system storage backend that takes an app module and works
@@ -15,6 +16,7 @@ class NamespacedAngularAppStorage(AppStaticStorage):
         # app is the actual app module
         self.prefix = app
         super(NamespacedAngularAppStorage, self).__init__(app, *args, **kwargs)
+
 
 class NamespacedE2ETestAppStorage(AppStaticStorage):
     """
