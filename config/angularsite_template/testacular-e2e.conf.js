@@ -6,10 +6,6 @@ files = [
   '**/tests/e2e/**/*.js'
 ];
 
-excludes = [
-  'djangular/config/angularapp_template/tests/e2e/*.js'
-];
-
 autoWatch = false;
 
 browsers = ['Chrome'];

@@ -3,17 +3,12 @@ basePath = '../';
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  'djangular/static/lib/angular/angular.js',
-  'djangular/static/lib/angular/angular-*.js',
-  'djangular/tests/lib/angular/angular-mocks.js',
-  'djangular/templates/app.js',
+  '{{ djangular_root }}/static/lib/angular/angular.js',
+  '{{ djangular_root }}/static/lib/angular/angular-*.js',
+  '{{ djangular_root }}/tests/lib/angular/angular-mocks.js',
+  '{{ djangular_root }}/templates/app.js',
   '**/app/js/**/*.js',
   '**/tests/unit/**/*.js'
-];
-
-excludes = [
-  'djangular/config/angularapp_template/app/js/*.js',
-  'djangular/config/angularapp_template/tests/unit/*.js'
 ];
 
 autoWatch = true;

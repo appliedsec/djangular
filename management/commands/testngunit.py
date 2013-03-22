@@ -1,4 +1,5 @@
-from . import TestacularStartCommand
+from djangular.management.base import TestacularStartCommand
+
 
 class Command(TestacularStartCommand):
     help = ("Convenience command to run the Testacular unit tests in all apps.")
