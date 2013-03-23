@@ -7,3 +7,6 @@ local_settings.py
 .idea
 .hg
 .hgignore
+
+dist
+djangular.egg-info
