@@ -12,7 +12,11 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
     requires_model_validation = False
 
     def handle(self, app_name=None, target=None, **options):
-        options['template'] = os.path.join(self.get_djangular_root(), 'config', 'angularapp_template')
-        options['extensions'] = ['.py', '.js']  # Include JS Files for parsing.
-        options['files'] = ['index.html']
+        # Override the options to setup the template command.
+        options.update({
+            'template': os.path.join(self.get_djangular_root(), 'config', 'angularapp_template'),
+            'extensions': ['.py', '.js'],  # Include JS Files for parsing.
+            'files': ['index.html']
+        })
+
         mgmt.call_command('startapp', app_name, target, **options)

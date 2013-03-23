@@ -1,9 +1,11 @@
-basePath = '../../';
+basePath = '../';
 
 files = [
   ANGULAR_SCENARIO,
   ANGULAR_SCENARIO_ADAPTER,
-  '**/tests/e2e/**/*.js'
+
+// JS Files to be tested: {% for app_path in app_paths %}
+  '{{ app_path }}/tests/e2e/**/*.js', // {% endfor %}
 ];
 
 autoWatch = false;

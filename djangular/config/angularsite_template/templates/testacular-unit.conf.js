@@ -7,8 +7,12 @@ files = [
   '{{ djangular_root }}/static/lib/angular/angular-*.js',
   '{{ djangular_root }}/tests/lib/angular/angular-mocks.js',
   '{{ djangular_root }}/templates/app.js',
-  '**/app/js/**/*.js',
-  '**/tests/unit/**/*.js'
+// NOTE: Place other Javascript dependencies here.
+
+// JS Files to be tested: {% for app_path in app_paths %}
+  '{{ app_path }}/app/js/**/*.js', // {% endfor %}
+// JS Tests: {% for app_path in app_paths %}
+  '{{ app_path }}/tests/unit/**/*.js', // {% endfor %}
 ];
 
 autoWatch = true;

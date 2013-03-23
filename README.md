@@ -31,11 +31,10 @@ Configuration Changes Needed for Djangular
         )
 
 + After you install Djangular inside a project, you will need to run the `makeangularsite` command to properly setup
-  Testacular into your default site directory.
+  Testacular into your default site directory.  Note: You may need to edit these configuration templates to add any
+  additional javascript libraries.
 
         python manage.py makeangularsite
-
-    * Note: You may need to edit these configuration files to load any additional javascript libraries.
 
 + The STATICFILES_FINDERS needs to be updated to include `djangular.finders.NamespacedAngularAppDirectoriesFinder`.
 
@@ -46,7 +45,7 @@ Configuration Changes Needed for Djangular
         )
 
 + Because of this new finder, the `findstatic` and `collectstatic` commands will place the angular files underneath an
-  `app_name/` folder.  You will not need to namespace each of your static directories (unless you really want to).
+  `<app_name>/` folder.  You will not need to namespace each of your static directories (unless you really want to).
 
 + To create an app already setup with the djangular (angular-seed) structure, run `python manage.py startangularapp
   <app_name>` from the command line.  This will create the files and directory structures needed for you to get
@@ -91,13 +90,12 @@ Comparison between Djangular and Angular-Seed
 
 + The `scripts/` directory has removed, because the Angular-Seed scripts have been made into Django commands.  These
   commands exist in the standard `management/` directory.
-    * `makeangularsite` places the Angular-Seed configuration inside the given Django Site directory.  This should be
-      run after installing Djangular.
+    * `makeangularsite` places the Testacular configuration templates inside the given Django Site directory.  This
+      should be run after installing Djangular.
     * `runtestserver` runs a local Django Web Server configured to support running all e2e tests.
     * `startangularapp` creates a Django app with the Angular structure.
-    * `testngunit` runs the Testacular Server for all of the unit tests.
-    * `testnge2e` runs the Testacular Server for all of the e2e tests.  This requires the `runtestserver` to be running
-      beforehand.
+    * `testjs` runs the Testacular Server for either the unit or e2e tests.  Note that the e2e tests requires the
+      `runtestserver` to be running beforehand.
 
 
 How to obtain the Django Template variables into Angular
@@ -109,12 +107,10 @@ template variables like the `STATIC_URL`, `MEDIA_URL`, the User object, etc.  Th
 standard Angular filtering rules.  The URL for this JavaScript is `/djangular/app.js` (Note that is not static).
 
 
-Roadmap
--------
+Current Roadmap
+---------------
 
-+ Allow testacular configuration files to be placed inside other sites or directories than just the default.
-+ Modify project to use standard python packaging, so this can be installed via pip.
-+ Allow single app testing for testacular unit and e2e tests.
 + Auto-detection of node and testacular installs.
 + Providing additional synchronization between Django models and Angular's $resource.  This includes removing the patch
   for Angular's $resource, yet not having to require Django's `FORCE_SLASHES` setting to be False.
++ Using Django's ModelForms and Templates to provide an easy way to generate Angular partials.
