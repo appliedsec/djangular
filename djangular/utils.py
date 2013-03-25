@@ -32,6 +32,7 @@ class SiteAndPathUtils(object):
         """
         default_site = self.get_default_site_app()
         path = self.get_default_site_path()
+        # Move up one directory per '.' in site path.  Most sites are at the top level, so this is just a precaution.
         for _ in range(len(default_site.split('.'))):
             path = os.path.dirname(path)
         return path

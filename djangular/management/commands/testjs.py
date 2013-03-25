@@ -11,16 +11,19 @@ from optparse import make_option
 
 DEFAULT_TYPE = 'unit'
 
+
 class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
     """
     A base command that calls testacular from the command line, passing the options and arguments directly.
     """
     requires_model_validation = False
-    help = "Runs the JS Testacular tests for the given test type and apps."
+    help = ("Runs the JS Testacular tests for the given test type and apps.  If no apps are specified, tests will be "
+            "run for every app in INSTALLED_APPS.")
     args = '[type] [appname ...]'
     option_list = mgmt.base.BaseCommand.option_list + (
         make_option('--greedy', action='store_true',
-                    help="Run every app in the project, ignoring passed in apps and the INSTALLED_APPS setting."),
+                    help="Run every app in the project, ignoring passed in apps and the INSTALLED_APPS setting.  "
+                         "Note that running e2e tests for non-installed apps will most likely cause them to fail."),
     )
 
     def get_existing_apps_from(self, app_list):
@@ -42,22 +45,27 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         return existing_paths
 
     def usage(self, subcommand):
+        # Default message when templates are missing
+        types_message = mgmt.color_style().ERROR(
+            "NOTE: You will need to run the following command to create the needed Testacular config templates before "
+            "running this command.\n"
+            "  python manage.py makeangularsite"
+        )
+
+        # Check and see if templates exist
         template_path = os.path.join(self.get_default_site_app(), 'templates')
-        filename_matches = [re.match(r'^testacular-(.*).conf.js$', filename)
-                            for filename in os.listdir(template_path)]
-        template_types = [match.group(1) for match in filename_matches if match]
+        if os.path.exists(template_path) and os.path.isdir(template_path):
+            filename_matches = [re.match(r'^testacular-(.*).conf.js$', filename)
+                                for filename in os.listdir(template_path)]
+            template_types = [match.group(1) for match in filename_matches if match]
 
-        if len(template_types):
-            types_message = '\n'.join(["The following types of Testacular tests are available:"] +
-                                      ["  %s%s" % (test_type, '*' if test_type == DEFAULT_TYPE else '')
-                                       for test_type in template_types] +
-                                      ["", "If no apps are listed, tests from all the INSTALLED_APPS will be run."])
-        else:
-            types_message = (
-                "NOTE: You will need to run the following command to create the needed Testacular config templates.\n"
-                "  python manage.py makeangularsite"
-            )
+            if len(template_types):
+                types_message = '\n'.join(["The following types of Testacular tests are available:"] +
+                                          ["  %s%s" % (test_type, '*' if test_type == DEFAULT_TYPE else '')
+                                           for test_type in template_types] +
+                                          ["", "If no apps are listed, tests from all the INSTALLED_APPS will be run."])
 
+        # Append template message to standard usage
         parent_usage = super(Command, self).usage(subcommand)
         return "%s\n\n%s" % (parent_usage, types_message)
 
@@ -89,7 +97,7 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
             'djangular_root': self.get_djangular_root()
         }), autoescape=False)
 
-        # Write the template content to temporary file
+        # Establish the template content in memory
         with open(testacular_config_template, 'rb') as config_template:
             template_content = config_template.read()
             template_content = template_content.decode('utf-8')
@@ -107,20 +115,22 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         if not template_content:
             raise IOError("The produced Testacular config was empty.")
 
+        # Write the template content to the temp file and close it, so the testacular process can read it
         temp_config_file = tempfile.NamedTemporaryFile(suffix='.conf.js', prefix='tmp_testacular_',
                                                        dir=self.get_default_site_app(),
-                                                       delete=False)  # Manually delete so subprocess can read...
-
+                                                       delete=False)  # Manually delete so subprocess can read
         try:
             temp_config_file.write(template_content)
             temp_config_file.close()
 
-            # Start the testacular process...
+            # Start the testacular process
             self.stdout.write("\n")
             self.stdout.write("Starting Testacular Server (http://vojtajina.github.com/testacular)\n")
             self.stdout.write("-------------------------------------------------------------------\n")
 
             subprocess.call(['testacular', 'start', temp_config_file.name])
+
+        # When the user kills the testacular process, do nothing, then remove the temp file
         except KeyboardInterrupt:
             pass
         finally:

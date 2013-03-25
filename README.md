@@ -12,9 +12,23 @@ current mindset is to limit the amount of changes introduced by Djangular.
 Requirements
 ------------
 
-+ Local installs of Node.js and Testacular for testing.
 + Currently requires Python 2.7.
 + Requires Django 1.4 or 1.5.
++ Local installs of Node.js and Testacular for testing.
+
+
+Installation
+------------
+
++ You may install directly from pypi:
+
+        python setup.py install
+
++ Or download the source and install it in a terminal/console:
+
+        pip install djangular
+
++ Or download the source and move the djangular directory inside your django project as an app.
 
 
 Configuration Changes Needed for Djangular
