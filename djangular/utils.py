@@ -5,7 +5,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class SiteAndPathUtils(object):
     """
-    Mixing to get commonly used directories in Djangular Commands
+    Mixin to get commonly used directories in Djangular Commands
     """
     def get_default_site_app(self):
         """

@@ -9,14 +9,11 @@ from django.conf import settings
 from djangular import utils
 from optparse import make_option
 
-DEFAULT_TYPE = 'unit'
-
 
 class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
     """
     A base command that calls testacular from the command line, passing the options and arguments directly.
     """
-    requires_model_validation = False
     help = ("Runs the JS Testacular tests for the given test type and apps.  If no apps are specified, tests will be "
             "run for every app in INSTALLED_APPS.")
     args = '[type] [appname ...]'
@@ -25,6 +22,10 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
                     help="Run every app in the project, ignoring passed in apps and the INSTALLED_APPS setting.  "
                          "Note that running e2e tests for non-installed apps will most likely cause them to fail."),
     )
+    requires_model_validation = False
+
+    default_test_type = 'unit'
+    template_dir = 'templates'
 
     def get_existing_apps_from(self, app_list):
         """
@@ -53,7 +54,7 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         )
 
         # Check and see if templates exist
-        template_path = os.path.join(self.get_default_site_app(), 'templates')
+        template_path = os.path.join(self.get_default_site_app(), self.template_dir)
         if os.path.exists(template_path) and os.path.isdir(template_path):
             filename_matches = [re.match(r'^testacular-(.*).conf.js$', filename)
                                 for filename in os.listdir(template_path)]
@@ -61,7 +62,7 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
 
             if len(template_types):
                 types_message = '\n'.join(["The following types of Testacular tests are available:"] +
-                                          ["  %s%s" % (test_type, '*' if test_type == DEFAULT_TYPE else '')
+                                          ["  %s%s" % (test_type, '*' if test_type == self.default_test_type else '')
                                            for test_type in template_types] +
                                           ["", "If no apps are listed, tests from all the INSTALLED_APPS will be run."])
 
@@ -69,13 +70,13 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         parent_usage = super(Command, self).usage(subcommand)
         return "%s\n\n%s" % (parent_usage, types_message)
 
-    def handle(self, test_type=DEFAULT_TYPE, *args, **options):
+    def handle(self, test_type=None, *args, **options):
         self.verbosity = int(options.get('verbosity'))
-        self.test_type = test_type
+        self.test_type = test_type or self.default_test_type
 
         # Determine template location
         testacular_config_template = \
-            os.path.join(self.get_default_site_app(), 'templates', 'testacular-%s.conf.js' % self.test_type)
+            os.path.join(self.get_default_site_app(), self.template_dir, 'testacular-%s.conf.js' % self.test_type)
         if self.verbosity >= 2:
             self.stdout.write("Using testacular template: %s" % testacular_config_template)
 
