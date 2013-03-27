@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='djangular',
-    version='0.2',
+    version='0.2.1',
     description="A reusable app that provides better app integration with AngularJS.",
     long_description="""
 A reusable app that provides better app integration with Angular.  Djangular allows you to create Angular content per
