@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.staticfiles.storage import AppStaticStorage
 
 
@@ -14,7 +16,7 @@ class NamespacedAngularAppStorage(AppStaticStorage):
         Returns a static file storage if available in the given app.
         """
         # app is the actual app module
-        self.prefix = app
+        self.prefix = os.path.join(*(app.split('.')))
         super(NamespacedAngularAppStorage, self).__init__(app, *args, **kwargs)
 
 
@@ -25,14 +27,15 @@ class NamespacedE2ETestAppStorage(AppStaticStorage):
     in the url for the content.  NOTE: This should only be used for
     end-to-end testing.
     """
-    source_dir = 'tests/e2e'
+    source_dir = os.path.join('tests', 'e2e')
 
     def __init__(self, app, *args, **kwargs):
         """
         Returns a static file storage if available in the given app.
         """
         # app is the actual app module
-        self.prefix = '{0}/{1}'.format(self.source_dir, app)
+        prefix_args = [self.source_dir] + app.split('.')
+        self.prefix = os.path.join(*prefix_args)
         super(NamespacedE2ETestAppStorage, self).__init__(app, *args, **kwargs)
 
 
@@ -43,12 +46,13 @@ class NamespacedLibTestAppStorage(AppStaticStorage):
     in the url for the content.  NOTE: This should only be used for
     end-to-end testing.
     """
-    source_dir = 'tests/lib'
+    source_dir = os.path.join('tests', 'lib')
 
     def __init__(self, app, *args, **kwargs):
         """
         Returns a static file storage if available in the given app.
         """
         # app is the actual app module
-        self.prefix = '{0}/lib'.format(app)
+        prefix_args = app.split('.') + ['lib']
+        self.prefix = os.path.join(*prefix_args)
         super(NamespacedLibTestAppStorage, self).__init__(app, *args, **kwargs)
