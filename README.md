@@ -14,7 +14,7 @@ Requirements
 
 + Currently requires Python 2.7.
 + Requires Django 1.4 or 1.5.
-+ Local installs of Node.js and Testacular for testing.
++ Local installs of Node.js and Karma ~~Testacular~~ for testing.
 
 
 Installation
@@ -22,11 +22,11 @@ Installation
 
 + You may install directly from pypi:
 
-        python setup.py install
+        pip install djangular
 
 + Or download the source and install it in a terminal/console:
 
-        pip install djangular
+        python setup.py install
 
 + Or download the source and move the djangular directory inside your django project as an app.
 
@@ -100,7 +100,7 @@ Comparison between Djangular and Angular-Seed
   will use the normal Django static urls: `{{ STATIC URL }}/lib/angular/angular.js`
 
 + The `config/` directory is now placed inside of your default Django site.  Each individual Django app doesn't need
-  its own AngularJS or testacular config.
+  its own AngularJS or Karma ~~testacular~~ config.
 
 + The `scripts/` directory has removed, because the Angular-Seed scripts have been made into Django commands.  These
   commands exist in the standard `management/` directory.
@@ -124,7 +124,7 @@ standard Angular filtering rules.  The URL for this JavaScript is `/djangular/ap
 Current Roadmap
 ---------------
 
-+ Auto-detection of node and testacular installs.
++ Auto-detection of node and karma ~~testacular~~ installs.
 + Providing additional synchronization between Django models and Angular's $resource.  This includes removing the patch
   for Angular's $resource, yet not having to require Django's `FORCE_SLASHES` setting to be False.
 + Using Django's ModelForms and Templates to provide an easy way to generate Angular partials.
