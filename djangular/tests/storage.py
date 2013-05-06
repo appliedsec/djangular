@@ -14,7 +14,7 @@ class NamespacedAppAngularStorageTest(TestCase):
     @base.test_with_angularapp_template_as_python_module
     def test_prefix_is_given_app_name_for_more_complicated_scenario(self):
         app_storage = storage.NamespacedAngularAppStorage('djangular.config.angularapp_template')
-        self.assertEqual(app_storage.prefix, 'djangular.config.angularapp_template')
+        self.assertEqual(app_storage.prefix, 'djangular/config/angularapp_template')
 
 
 class NamespacedE2ETestAppStorageTest(TestCase):
@@ -28,4 +28,4 @@ class NamespacedE2ETestAppStorageTest(TestCase):
     @base.test_with_angularapp_template_as_python_module
     def test_prefix_is_given_app_name_for_more_complicated_scenario(self):
         app_storage = storage.NamespacedE2ETestAppStorage('djangular.config.angularapp_template')
-        self.assertEqual(app_storage.prefix, 'tests/e2e/djangular.config.angularapp_template')
+        self.assertEqual(app_storage.prefix, 'tests/e2e/djangular/config/angularapp_template')

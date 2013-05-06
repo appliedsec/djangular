@@ -1,5 +1,7 @@
 import os
 
+from django.test import SimpleTestCase
+
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def test_with_angularapp_template_as_python_module(test_fn):
@@ -26,3 +28,10 @@ def test_with_angularapp_template_as_python_module(test_fn):
                     os.remove(compiled_file_name)
 
     return fn
+
+
+class TestAngularAppAsPythonModuleTest(SimpleTestCase):
+
+    @test_with_angularapp_template_as_python_module
+    def test_init_py_created(self):
+        self.assertTrue(os.path.exists('{0}/../config/__init__.py'.format(BASE_DIR)))
