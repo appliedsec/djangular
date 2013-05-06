@@ -14,7 +14,7 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
     """
     A base command that calls testacular from the command line, passing the options and arguments directly.
     """
-    help = ("Runs the JS Testacular tests for the given test type and apps.  If no apps are specified, tests will be "
+    help = ("Runs the JS Karma tests for the given test type and apps.  If no apps are specified, tests will be "
             "run for every app in INSTALLED_APPS.")
     args = '[type] [appname ...]'
     option_list = mgmt.base.BaseCommand.option_list + (
@@ -48,7 +48,7 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
     def usage(self, subcommand):
         # Default message when templates are missing
         types_message = mgmt.color_style().ERROR(
-            "NOTE: You will need to run the following command to create the needed Testacular config templates before "
+            "NOTE: You will need to run the following command to create the needed Karma config templates before "
             "running this command.\n"
             "  python manage.py makeangularsite"
         )
@@ -56,12 +56,12 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         # Check and see if templates exist
         template_path = os.path.join(self.get_default_site_app(), self.template_dir)
         if os.path.exists(template_path) and os.path.isdir(template_path):
-            filename_matches = [re.match(r'^testacular-(.*).conf.js$', filename)
+            filename_matches = [re.match(r'^karma-(.*).conf.js$', filename)
                                 for filename in os.listdir(template_path)]
             template_types = [match.group(1) for match in filename_matches if match]
 
             if len(template_types):
-                types_message = '\n'.join(["The following types of Testacular tests are available:"] +
+                types_message = '\n'.join(["The following types of Karma tests are available:"] +
                                           ["  %s%s" % (test_type, '*' if test_type == self.default_test_type else '')
                                            for test_type in template_types] +
                                           ["", "If no apps are listed, tests from all the INSTALLED_APPS will be run."])
@@ -75,13 +75,13 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         self.test_type = test_type or self.default_test_type
 
         # Determine template location
-        testacular_config_template = \
-            os.path.join(self.get_default_site_app(), self.template_dir, 'testacular-%s.conf.js' % self.test_type)
+        karma_config_template = \
+            os.path.join(self.get_default_site_app(), self.template_dir, 'karma-%s.conf.js' % self.test_type)
         if self.verbosity >= 2:
-            self.stdout.write("Using testacular template: %s" % testacular_config_template)
+            self.stdout.write("Using karma template: %s" % karma_config_template)
 
-        if not os.path.exists(testacular_config_template):
-            raise IOError("Testacular template %s was not found." % testacular_config_template)
+        if not os.path.exists(karma_config_template):
+            raise IOError("Karma template %s was not found." % karma_config_template)
 
         # Establish the Context for the template
         if options.get('greedy', False):
@@ -99,7 +99,7 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         }), autoescape=False)
 
         # Establish the template content in memory
-        with open(testacular_config_template, 'rb') as config_template:
+        with open(karma_config_template, 'rb') as config_template:
             template_content = config_template.read()
             template_content = template_content.decode('utf-8')
             js_template = template.Template(template_content)
@@ -108,30 +108,30 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
 
             if self.verbosity >= 3:
                 self.stdout.write("\n")
-                self.stdout.write("Testacular config contents")
-                self.stdout.write("--------------------------")
+                self.stdout.write("Karma config contents")
+                self.stdout.write("---------------------")
                 self.stdout.write(template_content)
                 self.stdout.write("\n")
 
         if not template_content:
-            raise IOError("The produced Testacular config was empty.")
+            raise IOError("The produced Karma config was empty.")
 
-        # Write the template content to the temp file and close it, so the testacular process can read it
-        temp_config_file = tempfile.NamedTemporaryFile(suffix='.conf.js', prefix='tmp_testacular_',
+        # Write the template content to the temp file and close it, so the karma process can read it
+        temp_config_file = tempfile.NamedTemporaryFile(suffix='.conf.js', prefix='tmp_karma_',
                                                        dir=self.get_default_site_app(),
                                                        delete=False)  # Manually delete so subprocess can read
         try:
             temp_config_file.write(template_content)
             temp_config_file.close()
 
-            # Start the testacular process
+            # Start the karma process
             self.stdout.write("\n")
-            self.stdout.write("Starting Testacular Server (http://vojtajina.github.com/testacular)\n")
-            self.stdout.write("-------------------------------------------------------------------\n")
+            self.stdout.write("Starting Karma Server (https://github.com/karma-runner/karma)\n")
+            self.stdout.write("-------------------------------------------------------------\n")
 
-            subprocess.call(['testacular', 'start', temp_config_file.name])
+            subprocess.call(['karma', 'start', temp_config_file.name])
 
-        # When the user kills the testacular process, do nothing, then remove the temp file
+        # When the user kills the karma process, do nothing, then remove the temp file
         except KeyboardInterrupt:
             pass
         finally:

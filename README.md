@@ -14,7 +14,7 @@ Requirements
 
 + Currently requires Python 2.7.
 + Requires Django 1.4 or 1.5.
-+ Local installs of Node.js and Karma ~~Testacular~~ for testing.
++ Local installs of Node.js and Karma for testing.
 
 
 Installation
@@ -45,7 +45,7 @@ Configuration Changes Needed for Djangular
         )
 
 + After you install Djangular inside a project, you will need to run the `makeangularsite` command to properly setup
-  Testacular into your default site directory.  Note: You may need to edit these configuration templates to add any
+  Karma into your default site directory.  Note: You may need to edit these configuration templates to add any
   additional javascript libraries.
 
         python manage.py makeangularsite
@@ -100,15 +100,15 @@ Comparison between Djangular and Angular-Seed
   will use the normal Django static urls: `{{ STATIC URL }}/lib/angular/angular.js`
 
 + The `config/` directory is now placed inside of your default Django site.  Each individual Django app doesn't need
-  its own AngularJS or Karma ~~testacular~~ config.
+  its own AngularJS or Karma config.
 
 + The `scripts/` directory has removed, because the Angular-Seed scripts have been made into Django commands.  These
   commands exist in the standard `management/` directory.
-    * `makeangularsite` places the Testacular configuration templates inside the given Django Site directory.  This
-      should be run after installing Djangular.
+    * `makeangularsite` places the Karma configuration templates inside the given Django Site directory.  This should
+      be run after installing Djangular.
     * `runtestserver` runs a local Django Web Server configured to support running all e2e tests.
     * `startangularapp` creates a Django app with the Angular structure.
-    * `testjs` runs the Testacular Server for either the unit or e2e tests.  Note that the e2e tests requires the
+    * `testjs` runs the Karma Server for either the unit or e2e tests.  Note that the e2e tests requires the
       `runtestserver` to be running beforehand.
 
 
@@ -124,7 +124,7 @@ standard Angular filtering rules.  The URL for this JavaScript is `/djangular/ap
 Current Roadmap
 ---------------
 
-+ Auto-detection of node and karma ~~testacular~~ installs.
++ Auto-detection of node and karma installs.
 + Providing additional synchronization between Django models and Angular's $resource.  This includes removing the patch
   for Angular's $resource, yet not having to require Django's `FORCE_SLASHES` setting to be False.
 + Using Django's ModelForms and Templates to provide an easy way to generate Angular partials.
