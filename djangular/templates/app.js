@@ -35,7 +35,14 @@ var djangular = angular.module('djangular', ['ngCookies']).
                 // TODO: Do we set ngSrc as well?
             }
         };
-    }]);
+    }]).
+    directive('csrfToken', function() {
+        return {
+            restrict: 'E',
+            template: "{% csrf_token %}",
+            replace: true
+        };
+    });
 
 // Assign the CSRF Token as needed, until Angular provides a way to do this properly (https://github.com/angular/angular.js/issues/735)
 djangular.
@@ -45,5 +52,10 @@ djangular.
     }]).
     run(['$cookies', function($cookies) {
         // now assign the $httpProvider the cookie which Django assigns...
+        // TODO: Only for same origin sites...
         djangular.$httpProvider.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
+        djangular.$httpProvider.defaults.headers.put['X-CSRFToken'] = $cookies['csrftoken'];
+        if (!djangular.$httpProvider.defaults.headers.delete)
+            djangular.$httpProvider.defaults.headers.delete = {};
+        djangular.$httpProvider.defaults.headers.delete['X-CSRFToken'] = $cookies['csrftoken'];
     }]);
