@@ -5,6 +5,9 @@ var djangular = angular.module('djangular', ['ngCookies']).
         'STATIC_URL': '{% get_static_prefix %}',
         'MEDIA_URL': '{% get_media_prefix %}',
         'USER_NAME': '{{ user.username|escapejs }}',
+        'GROUP_NAMES': [ // {% for group in user.groups.all %}
+            '{{ group.name|escapejs }}', // {% endfor %}
+        ],
         'IS_AUTHENTICATED': 'True' === '{{ user.is_authenticated|escapejs }}'
     }).
     filter('django', ['DjangoProperties', function(DjangoProperties) {
