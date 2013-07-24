@@ -27,5 +27,5 @@ class Command(utils.SiteAndPathUtils, templates.TemplateCommand):
 
         template_path = os.path.join(site_name, 'templates')
         self.stdout.write(
-            'Update the testacular config templates in %s to add any additional JS dependencies.' % template_path)
+            'Update the Karma config templates in %s to add any additional JS dependencies.' % template_path)
 
