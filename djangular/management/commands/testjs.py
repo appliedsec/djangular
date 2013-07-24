@@ -12,7 +12,7 @@ from optparse import make_option
 
 class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
     """
-    A base command that calls testacular from the command line, passing the options and arguments directly.
+    A base command that calls Karma from the command line, passing the options and arguments directly.
     """
     help = ("Runs the JS Karma tests for the given test type and apps.  If no apps are specified, tests will be "
             "run for every app in INSTALLED_APPS.")
