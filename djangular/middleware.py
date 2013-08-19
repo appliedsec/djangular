@@ -11,7 +11,7 @@ class AngularJsonVulnerabilityMiddleware(object):
     VALID_CONTENT_TYPES = ['application/json']
 
     def process_response(self, request, response):
-        if response['Content-Type'] in self.VALID_CONTENT_TYPES and response.status_code in self.VALID_STATUS_CODES:
+        if response.status_code in self.VALID_STATUS_CODES and response['Content-Type'] in self.VALID_CONTENT_TYPES:
             response.content = self.CONTENT_PREFIX + response.content
 
         return response
