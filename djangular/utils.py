@@ -11,7 +11,10 @@ class SiteAndPathUtils(object):
         """
         Retrieves the name of the django app that contains the site config.
         """
-        return os.environ["DJANGO_SETTINGS_MODULE"].replace('.settings', '')
+        if "DJANGULAR_TEMPLATE_PATH" in os.environ:
+            return os.environ["DJANGULAR_TEMPLATE_PATH"]
+        else:
+            return os.environ["DJANGO_SETTINGS_MODULE"].replace('.settings', '')
 
     def get_default_site_path(self):
         """
