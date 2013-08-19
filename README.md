@@ -93,6 +93,12 @@ Configuration Changes Needed for Djangular
             'djangular.middleware.AngularJsonVulnerabilityMiddleware'
         )
 
++ Finally, if your project root's settings file is not located in the root folder,
+  or not named settings.py, you'll need to explictly tell djangular where your 
+  project root is by setting `DJANGULAR_TEMPLATE_PATH` in your enviroment.
+  
+        export DJANGULAR_TEMPLATE_PATH='project_root'
+
 
 Comparison between Djangular and Angular-Seed
 ---------------------------------------------
