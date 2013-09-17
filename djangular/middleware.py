@@ -4,7 +4,7 @@ class AngularJsonVulnerabilityMiddleware(object):
     A middleware that inserts the AngularJS JSON Vulnerability request on JSON responses.
     """
     # The AngularJS JSON Vulnerability content prefix. See http://docs.angularjs.org/api/ng.$http
-    CONTENT_PREFIX = ")]}',\n"
+    CONTENT_PREFIX = b")]}',\n"
 
     # Make this class easy to extend by allowing class level access.
     VALID_STATUS_CODES = [200, 201, 202]
