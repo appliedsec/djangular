@@ -1,5 +1,5 @@
 import os
-
+from re import sub
 from django.contrib.staticfiles.storage import AppStaticStorage
 
 
@@ -18,6 +18,10 @@ class NamespacedAngularAppStorage(AppStaticStorage):
         # app is the actual app module
         self.prefix = os.path.join(*(app.split('.')))
         super(NamespacedAngularAppStorage, self).__init__(app, *args, **kwargs)
+
+    def path(self, name):
+        name = sub('^' + self.prefix + os.sep, '', name)
+        return super(NamespacedAngularAppStorage, self).path(name)
 
 
 class NamespacedE2ETestAppStorage(AppStaticStorage):
