@@ -1,6 +1,5 @@
-// Dynamic JS File to load Django values.  Add additional values as needed.
 // {% load static %} - This is put in a comment so this can be loaded as a normal JS file.
-var djangular = angular.module('djangular', ['ngCookies']).
+angular.module('djangular', []).
     constant('DjangoProperties', {
         'STATIC_URL': '{% get_static_prefix %}',
         'MEDIA_URL': '{% get_media_prefix %}',
@@ -21,24 +20,30 @@ var djangular = angular.module('djangular', ['ngCookies']).
     }]).
     directive('djangoHref', ['$filter', function($filter) {
         return {
-            priority: 100,  // one above the ngHref directive.
-            link: function postLink(scope, elem, attrs) {
-                var newHref = $filter('django')(attrs.djangoHref);
-                attrs.$set('href', newHref);
-                // TODO: Do we set ngHref as well?
+            restrict: 'A',
+            priority: 98, // same as ng-href
+            link: function(scope, elem, attrs) {
+                attrs.$observe('djangoHref', function(value) {
+                    if (!value) return;
+                    attrs.$set('href', $filter('django')(value));
+                });
             }
         };
     }]).
     directive('djangoSrc', ['$filter', function($filter) {
         return {
-            priority: 100,  // one above the hgSrc directive.
-            link: function postLink(scope, elem, attrs) {
-                var newSrc = $filter('django')(attrs.djangoSrc);
-                attrs.$set('src', newSrc);
-                // TODO: Do we set ngSrc as well?
+            restrict: 'A',
+            priority: 98, // same as ng-src
+            link: function(scope, elem, attrs) {
+                attrs.$observe('djangoSrc', function(value) {
+                    if (!value) return;
+                    attrs.$set('src', $filter('django')(value));
+                });
             }
         };
-    }]).
+    }]);
+
+var djangularCsrf = angular.module('djangular.csrf', ['ngCookies']).
     directive('csrfToken', function() {
         return {
             restrict: 'E',
@@ -47,18 +52,19 @@ var djangular = angular.module('djangular', ['ngCookies']).
         };
     });
 
+// {% if not disable_csrf_headers %}
 // Assign the CSRF Token as needed, until Angular provides a way to do this properly (https://github.com/angular/angular.js/issues/735)
-djangular.
+djangularCsrf.
     config(['$httpProvider', function($httpProvider) {
         // cache $httpProvider, as it's only available during config...
-        djangular.$httpProvider = $httpProvider;
+        djangularCsrf.$httpProvider = $httpProvider;
     }]).
     run(['$cookies', function($cookies) {
         // now assign the $httpProvider the cookie which Django assigns...
-        // TODO: Only for same origin sites...
-        djangular.$httpProvider.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
-        djangular.$httpProvider.defaults.headers.put['X-CSRFToken'] = $cookies['csrftoken'];
-        if (!djangular.$httpProvider.defaults.headers.delete)
-            djangular.$httpProvider.defaults.headers.delete = {};
-        djangular.$httpProvider.defaults.headers.delete['X-CSRFToken'] = $cookies['csrftoken'];
+        djangularCsrf.$httpProvider.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
+        djangularCsrf.$httpProvider.defaults.headers.put['X-CSRFToken'] = $cookies['csrftoken'];
+        if (!djangularCsrf.$httpProvider.defaults.headers.delete)
+            djangularCsrf.$httpProvider.defaults.headers.delete = {};
+        djangularCsrf.$httpProvider.defaults.headers.delete['X-CSRFToken'] = $cookies['csrftoken'];
     }]);
+// {% endif %}
