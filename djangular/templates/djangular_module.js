@@ -1,5 +1,6 @@
-// {% load static %} - This is put in a comment so this can be loaded as a normal JS file.
-angular.module('djangular', []).
+// All template syntax is commented so this can be loaded as a normal JS file.
+// {% load static %}
+var djangular = angular.module('djangular', []).
     constant('DjangoProperties', {
         'STATIC_URL': '{% get_static_prefix %}',
         'MEDIA_URL': '{% get_media_prefix %}',
@@ -21,7 +22,7 @@ angular.module('djangular', []).
     directive('djangoHref', ['$filter', function($filter) {
         return {
             restrict: 'A',
-            priority: 98, // same as ng-href
+            priority: 99, // same as ng-href
             link: function(scope, elem, attrs) {
                 attrs.$observe('djangoHref', function(value) {
                     if (!value) return;
@@ -33,7 +34,7 @@ angular.module('djangular', []).
     directive('djangoSrc', ['$filter', function($filter) {
         return {
             restrict: 'A',
-            priority: 98, // same as ng-src
+            priority: 99, // same as ng-src
             link: function(scope, elem, attrs) {
                 attrs.$observe('djangoSrc', function(value) {
                     if (!value) return;

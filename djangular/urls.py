@@ -1,10 +1,6 @@
-from django.conf.urls import patterns, include, url
-
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from django.conf.urls import patterns, url
+from .views import DjangularModuleTemplateView
 
 urlpatterns = patterns('',
-    # Examples:
-    url(r'^app.js$', 'djangular.views.angular_module', name='angular-module'),
+    url(r'^app.js$', DjangularModuleTemplateView.as_view(), name='djangular-module')
 )
