@@ -22,7 +22,7 @@ amount of changes introduced by Djangular.
 """,
     keywords='djangular django angular angularjs',
     license='Apache',
-    packages=['djangular'],
+    packages=['djangular', 'angular12'],
     include_package_data=True,
     author='Brian Montgomery',
     author_email='brianm@appliedsec.com',
