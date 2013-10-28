@@ -297,9 +297,45 @@ The template (more or less) looks like the following:
 </html>
 ```
 
+Enabling CSRF protection in AngularJS Templates
+-----------------------------------------------
+
+If you have enabled CSRF protection in Django by adding the middleware
+`django.middleware.csrf.CsrfViewMiddleware` to the `MIDDLEWARE_CLASSES` setting,
+you may use the same protection in AngularJS templates in addition to Django
+template.  There are two different ways to enable this protection via djangular:
+
++ Make your main app dependent on the `djangular` module and use the included
+  `csrf-token` directive (that wraps the Django `csrf_token` template tag)
+  inside the appropriate `form` tags in your HTML.
+
+        // Inside your JavaScript
+        angular.module('myApp', ['djangular', ...]);
+        ...
+        <!-- In your Angular Template -->
+        <div ng-app="my-app">
+            ...
+            <form ...>
+                <csrf-token></csrf-token>
+            </form>
+        </div>
+
++ Make your main app dependent on the `djangular.csrf`, which will add the
+  appropriate CSRF Token Header in all POSTs, PUTs and DELETEs.  Note that this
+  way is vulnerable to cross-site scripting if you make a post to a domain
+  outside your control.
+
+        angular.module('myApp', ['djangular.csrf', ...]);
+
+If you allow a user to login (or logout) and don't redirect or reload the page,
+the tags and cookies provided by both methods above will be stale.  The second
+option (using the `djangular.csrf` module) provides a `UpdateCSRFToken` function
+that can be invoked with the new CSRF Token value.
+
 Current Roadmap
 ---------------
 
++ Better support for Django 1.6 and Angular 1.2.
 + Auto-detection of node and karma installs.
 + Providing additional synchronization between Django models and AngularJS's
   $resource. This includes removing the patch for AngularJS's $resource, yet not
