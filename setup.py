@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='djangular',
-    version='0.2.5',
+    version='0.3.0',
     description="A reusable app that provides better app integration with AngularJS.",
     long_description="""
 A reusable app that provides better app integration with AngularJS.  Djangular
@@ -22,7 +22,7 @@ amount of changes introduced by Djangular.
 """,
     keywords='djangular django angular angularjs',
     license='Apache',
-    packages=['djangular', 'angular12'],
+    packages=['djangular'],
     include_package_data=True,
     author='Brian Montgomery',
     author_email='brianm@appliedsec.com',

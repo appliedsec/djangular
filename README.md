@@ -16,7 +16,7 @@ Requirements
 ------------
 
 + Currently requires Python 2.7.
-+ Requires Django 1.4 or 1.5.
++ Supports Django 1.4+ and Angular 1.2.3.
 + Local installs of Node.js and Karma for testing.
 
 
@@ -45,18 +45,6 @@ Configuration Changes Needed for Djangular
         INSTALLED_APPS = (
             ...
             'django.contrib.staticfiles',
-            'djangular',
-            ...
-        )
-
-+ An AngularJS 1.2 experimental branch is now included in Djangular. To use the
-  experimental version of AngularJS, you will need to include the `angular12`
-  app above the `djangular` app in INSTALLED_APPS.
-
-        INSTALLED_APPS = (
-            ...
-            'django.contrib.staticfiles',
-            'angular12',
             'djangular',
             ...
         )
