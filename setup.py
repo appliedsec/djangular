@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='djangular',
-    version='0.3.0',
+    version='0.2.6',
     description="A reusable app that provides better app integration with AngularJS.",
     long_description="""
 A reusable app that provides better app integration with AngularJS.  Djangular
