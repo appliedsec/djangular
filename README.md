@@ -112,10 +112,6 @@ Configuration Changes Needed for Djangular
 Comparison between Djangular and Angular-Seed
 ---------------------------------------------
 
-+ Djangular includes a very small patch to angular-resource.js to force an
-  ending slash on resource URLs, so that `FORCE_SLASHES` does not need to be set
-  to `False`.
-
 + Each app has its own AngularJS "app" folder, with directories for CSS, JS,
   images and partials supplied. As a result, the URLs for these get grouped into
   the STATIC_URL structure of Django. So, each resource inside an AngularJS app
@@ -284,6 +280,20 @@ The template (more or less) looks like the following:
 </body>
 </html>
 ```
+
+Enforcing the end slashes of your Angular Resources
+---------------------------------------------------
+
+$resource is a convenient way to create REST-like services in Angular.  However,
+there currently [is a bug](https://github.com/angular/angular.js/issues/992) in
+$resource that will strip the ending slash, which means that $resource is
+unusable unless `settings.APPEND_SLASHES` is set to `FALSE`.
+
+Djangular used to patch this automatically, but it now includes a separate file
+(`djangular/static/js/resource_patch.js`) to handle this issue.  Simply include
+that javascript file in your page after you have loaded `angular-resource.js`
+and ending slashes will be preserved in $resource.
+
 
 Enabling CSRF protection in AngularJS Templates
 -----------------------------------------------

@@ -1,4 +1,3 @@
 recursive-include djangular *
-recursive-include angular12 *
 include LICENSE
 include README.md
