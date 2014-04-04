@@ -66,7 +66,7 @@ Configuration Changes Needed for Djangular
         )
 
 + Because of this new finder, the `findstatic` and `collectstatic` commands will
-  place the angular files in each app in an associated an `<app_name>/` folder.
+  place the angular files in each app in an associated `<app_name>/` folder.
   You will not need to namespace each of your static directories with the name
   of your Django application (unless you really want to).
 
@@ -76,7 +76,7 @@ Configuration Changes Needed for Djangular
   get started.
 
 + To use the AngularJS module that Djangular provides you, you'll need to add
-  the djangular app to your projects URLs.
+  the djangular app to your project's URLs.
 
         urlpatterns = patterns('',
             ...
