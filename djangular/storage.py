@@ -20,7 +20,7 @@ class NamespacedAngularAppStorage(AppStaticStorage):
         super(NamespacedAngularAppStorage, self).__init__(app, *args, **kwargs)
 
     def path(self, name):
-        name = sub('^' + self.prefix + os.sep, '', name)
+        name = sub('^' + self.prefix + os.sep.encode('string-escape'), '', name)
         return super(NamespacedAngularAppStorage, self).path(name)
 
 
