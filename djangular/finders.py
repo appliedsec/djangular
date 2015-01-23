@@ -11,7 +11,7 @@ if django.get_version() >= '1.7':
         A static files finder that looks in the directory of each app as
         specified in the source_dir attribute.
         """
-        source_dir = 'app'
+        source_dir = 'angular'
 
         def __init__(self, app_names=None, *args, **kwargs):
             super(NamespacedAngularAppDirectoriesFinder, self).__init__(

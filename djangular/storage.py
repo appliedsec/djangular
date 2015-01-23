@@ -9,7 +9,7 @@ class NamespacedAngularAppStorage(AppStaticStorage):
     for the ``app`` directory of it.  The app module will be included
     in the url for the content.
     """
-    source_dir = 'app'
+    source_dir = 'angular'
 
     def __init__(self, app, *args, **kwargs):
         """
