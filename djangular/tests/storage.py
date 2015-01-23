@@ -1,11 +1,11 @@
 import django
-from . import base
-
-from djangular import storage
-from django.test import TestCase
-
 
 if django.get_version() < '1.7':
+    from djangular import storage
+    from django.test import TestCase
+
+    from . import base
+
     class NamespacedAppAngularStorageTest(TestCase):
         def test_source_dir_is_app(self):
             self.assertEqual(storage.NamespacedAngularAppStorage.source_dir, 'app')
