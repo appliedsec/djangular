@@ -17,7 +17,7 @@ if django.get_version() >= '1.7':
             super(NamespacedAngularAppDirectoriesFinder, self).__init__(
                 app_names, *args, **kwargs)
 
-            for app_name, storage in self.storages.iteritems():
+            for app_name, storage in self.storages.items():
                 storage.prefix = os.path.join(*(app_name.split('.')))
 
         def find_in_app(self, app, path):
