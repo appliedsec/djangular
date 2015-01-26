@@ -1,10 +1,10 @@
 from djangular import middleware
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.http import request, response
 
 
-class AngularJsonVulnerabilityMiddlewareTest(TestCase):
+class AngularJsonVulnerabilityMiddlewareTest(SimpleTestCase):
 
     def test_that_middleware_does_nothing_to_html_requests(self):
         resp = response.HttpResponse(content_type='text/html', content='<html></html>')

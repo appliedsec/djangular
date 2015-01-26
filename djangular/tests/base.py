@@ -5,66 +5,52 @@ from django.test import SimpleTestCase
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-# TODO: Write without duplication...
-if django.get_version() >= '1.7':
-    from django.apps import apps
 
-    def test_with_angularapp_template_as_django_app(test_fn):
-        def fn(self):
-            config_module_file = None
-            try:
-                # Temporarily make config a python module by adding the __init__.py file.
-                config_module_file = open('{0}/../config/__init__.py'.format(BASE_DIR), 'w')
-                config_module_file.close()
+def _call_test_func(self, test_fn):
+    apps = None
+    need_to_call_unset = False
 
-            except Exception as e:
-                self.fail('Could not create files due to {0}'.format(e.message))
+    if django.get_version() >= '1.7':
+        from django.apps import apps
 
-            else:
-                if django.get_version() >= '1.7' and not \
-                        apps.is_installed('djangular.config.angularapp_template'):
-                    apps.set_installed_apps(tuple([
-                        'djangular.config.angularapp_template']))
-                    test_fn(self)
-                    apps.unset_installed_apps()
-                else:
-                    test_fn(self)
+        if not apps.is_installed('djangular.config.angularapp_template'):
+            apps.set_installed_apps(tuple([
+                'djangular.config.angularapp_template']))
+            need_to_call_unset = True
 
-            finally:
-                if config_module_file:
-                    if os.path.exists(config_module_file.name):
-                        os.remove(config_module_file.name)
+    try:
+        test_fn(self)
+    finally:
+        if apps and need_to_call_unset:
+            apps.unset_installed_apps()
 
-                    compiled_file_name = '{0}c'.format(config_module_file.name)
-                    if os.path.exists(compiled_file_name):
-                        os.remove(compiled_file_name)
 
-        return fn
-else:
-    def test_with_angularapp_template_as_django_app(test_fn):
-        def fn(self):
-            config_module_file = None
-            try:
-                # Temporarily make config a python module by adding the __init__.py file.
-                config_module_file = open('{0}/../config/__init__.py'.format(BASE_DIR), 'w')
-                config_module_file.close()
+def test_with_angularapp_template_as_django_app(test_fn):
+    def fn(self):
+        config_module_file = None
+        try:
+            # Temporarily make the config dif a python module by adding the
+            # __init__.py file.
+            config_module_file = open(
+                '{0}/../config/__init__.py'.format(BASE_DIR), 'w')
+            config_module_file.close()
 
-            except Exception as e:
-                self.fail('Could not create files due to {0}'.format(e.message))
+        except Exception as e:
+            self.fail('Could not create files due to {0}'.format(e.message))
 
-            else:
-                test_fn(self)
+        else:
+            _call_test_func(self, test_fn)
 
-            finally:
-                if config_module_file:
-                    if os.path.exists(config_module_file.name):
-                        os.remove(config_module_file.name)
+        finally:
+            if config_module_file:
+                if os.path.exists(config_module_file.name):
+                    os.remove(config_module_file.name)
 
-                    compiled_file_name = '{0}c'.format(config_module_file.name)
-                    if os.path.exists(compiled_file_name):
-                        os.remove(compiled_file_name)
+                compiled_file_name = '{0}c'.format(config_module_file.name)
+                if os.path.exists(compiled_file_name):
+                    os.remove(compiled_file_name)
 
-        return fn
+    return fn
 
 
 class TestAngularAppAsPythonModuleTest(SimpleTestCase):

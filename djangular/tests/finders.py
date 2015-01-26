@@ -3,12 +3,12 @@ import os
 
 from . import base
 from djangular import finders
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 APP_BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 
-class NamespacedAngularAppDirectoriesFinderTest(TestCase):
+class NamespacedAngularAppDirectoriesFinderTest(SimpleTestCase):
     @base.test_with_angularapp_template_as_django_app
     def test_find(self):
         if django.get_version() >= '1.7':
@@ -25,7 +25,7 @@ class NamespacedAngularAppDirectoriesFinderTest(TestCase):
         )
 
 
-class NamespacedE2ETestAppDirectoriesFinderTest(TestCase):
+class NamespacedE2ETestAppDirectoriesFinderTest(SimpleTestCase):
     @base.test_with_angularapp_template_as_django_app
     def test_find(self):
         if django.get_version() >= '1.7':
