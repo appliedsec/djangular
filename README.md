@@ -31,8 +31,9 @@ Requirements
 ------------
 
 + Currently requires Python 2.7.
-+ Supports Django 1.4+ and AngularJS 1.2+.
-+ -Local installs of Node.js and Karma for testing.-
++ Supports Django 1.4+ (including 1.7.x).
++ Supports AngularJS 1.2+ (including 1.3.x).
++ ~~Local installs of Node.js and Karma for testing.~~
 
 
 Installation
@@ -58,8 +59,8 @@ Installation
             ...
         )
 
-+ You will need to obtain a version of AngularJS and place it in a static folder
-  in one of your Django apps.  Djangular no longer includes a version of
++ You will need to obtain a version of AngularJS and place it in the `static`
+  folder of one of your Django apps.  Djangular no longer includes a version of
   AngularJS, since it updates too frequently.
 
 
@@ -69,7 +70,7 @@ Including AngularJS content in your Django Apps
 The most popular feature of Djangular, this will both include and namespace your
 AngularJS content inside your Django apps.  Each Django app has its own
 "angular" folder, with a layout matching the angular-seed project. As a result,
-the URLs for these get grouped into the STATIC_URL structure of Django.
+the URLs for these get grouped into the `STATIC_URL` structure of Django.
 
 + The staticfiles contrib library will need to be included in the INSTALLED_APPS
   setting.
@@ -97,7 +98,7 @@ the URLs for these get grouped into the STATIC_URL structure of Django.
     * Example: If you have a Django app named `foo` and you are using the
       default `STATIC_URL` in your settings, the main AngularJS module named
       `foo` would be found at `foo/angular/app.js` on the file system and at
-      `<STATIC_URL>/foo/app.js` from the browser.
+      `static/foo/app.js` from the browser.
     * This namespacing is done automatically.  This a `foo` app and a `bar` app
       can both have an `app.js` inside their `angular` directories, and they
       will not collide.
