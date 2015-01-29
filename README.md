@@ -17,7 +17,7 @@ Requirements
 
 + Currently requires Python 2.7.
 + Supports Django 1.4+ and Angular 1.2.3.
-+ Local installs of Node.js and Karma for testing.
++ -Local installs of Node.js and Karma for testing.-
 
 
 Installation
