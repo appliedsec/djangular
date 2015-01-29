@@ -21,10 +21,12 @@ class Command(utils.SiteAndPathUtils, TemplateCommand):
 
         # Override the options to setup the template command.
         options.update({
-            'template': os.path.join(self.get_djangular_root(), 'config', 'angularseed_template'),
-            'extensions': ['.html', '.js'],  # Include JS and HTML Files for parsing.
+            'template': os.path.join(
+                self.get_djangular_root(), 'config', 'angularseed_template'),
+            'extensions': ['.html', '.js'],  # Parse HTML And JS files
             'files': ['app.css']
         })
 
-        super(Command, self).handle('app', app_name, target or app_name, **options)
+        super(Command, self).handle(
+            'app', app_name, target or app_name, **options)
 
