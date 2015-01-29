@@ -7,17 +7,32 @@ massive AngularJS application inside of Django. This allows you to selectively
 use apps per site, as well as create a consistent structure across all of your
 Django apps.
 
-This is intended to be a Django version of the Angular-Seed project
+This is intended to be a Django version of the angular-seed project
 (https://github.com/angular/angular-seed). The current mindset is to limit the
 amount of changes introduced by Djangular.
+
+
+Features
+--------
+
++ Allows namespacing AngularJS content per Django app.  This allows the
+  AngularJS apps and modules to be included (or not) based on Django's settings,
+  and enforces a consistent structure to your Django/AngularJS apps.
++ Includes an AngularJS module that includes a subset of features similar to
+  what Django provides in its templates.
++ Adds a patch to AngularJS's $resource module, to enable end of URL slashes
+  that Django requires.
++ Improves security by enabling of CSRF protection and JSON Vulnerability
+  between Django and AngularJS.
++ Does not dictate how you use AngularJS inside your Django app.
 
 
 Requirements
 ------------
 
 + Currently requires Python 2.7.
-+ Supports Django 1.4+ and Angular 1.2.3.
-+ Local installs of Node.js and Karma for testing.
++ Supports Django 1.4+ and AngularJS 1.2+.
++ -Local installs of Node.js and Karma for testing.-
 
 
 Installation
@@ -34,13 +49,30 @@ Installation
 + Or download the source and move the djangular directory inside your django
   project as an app (this is the least recommended approach).
 
-
-Configuration Changes Needed for Djangular
-------------------------------------------
-
 + Djangular needs to be placed as an app inside a Django project and added to
-  the INSTALLED_APPS setting. Also, the staticfiles contrib library will need to
-  be included if it isn't.
+  the INSTALLED_APPS setting.
+
+        INSTALLED_APPS = (
+            ...
+            'djangular',
+            ...
+        )
+
++ You will need to obtain a version of AngularJS and place it in a static folder
+  in one of your Django apps.  Djangular no longer includes a version of
+  AngularJS, since it updates too frequently.
+
+
+Including AngularJS content in your Django Apps
+-----------------------------------------------
+
+The most popular feature of Djangular, this will both include and namespace your
+AngularJS content inside your Django apps.  Each Django app has its own
+"angular" folder, with a layout matching the angular-seed project. As a result,
+the URLs for these get grouped into the STATIC_URL structure of Django.
+
++ The staticfiles contrib library will need to be included in the INSTALLED_APPS
+  setting.
 
         INSTALLED_APPS = (
             ...
@@ -48,13 +80,6 @@ Configuration Changes Needed for Djangular
             'djangular',
             ...
         )
-
-+ After you install Djangular inside a project, you will need to run the
-  `makeangularsite` command to properly setup Karma into your default site
-  directory. Note: You may need to edit these configuration templates to add any
-  additional javascript libraries.
-
-        python manage.py makeangularsite
 
 + The STATICFILES_FINDERS needs to be updated to include
   `djangular.finders.NamespacedAngularAppDirectoriesFinder`.
@@ -69,11 +94,31 @@ Configuration Changes Needed for Djangular
   place the angular files in each app in an associated an `<app_name>/` folder.
   You will not need to namespace each of your static directories with the name
   of your Django application (unless you really want to).
+    * Example: If you have a Django app named `foo` and you are using the
+      default `STATIC_URL` in your settings, the main AngularJS module named
+      `foo` would be found at `foo/angular/app.js` on the file system and at
+      `<STATIC_URL>/foo/app.js` from the browser.
+    * This namespacing is done automatically.  This a `foo` app and a `bar` app
+      can both have an `app.js` inside their `angular` directories, and they
+      will not collide.
+    * Note: Because of these URLs, referring to AngularJS content in a separate
+      app should use a `../<separate_app>/` URL. This will help significantly
+      during testing to make sure paths are correct.
+    * Note: It is recommended to namespace the AngularJS code the same name as
+      the Django app. The created JS files do this already.
 
-+ To create an app that is already setup with the djangular (angular-seed)
++ To create an app that is already setup with the djangular (or angular-seed)
   structure, run `python manage.py startangularapp <app_name>` from the command
   line. This will create the files and directory structures needed for you to
   get started.
+
+
+Including some Django template-like features in your AngularJS templates
+------------------------------------------------------------------------
+
+One of the challenges in using AngularJS inside of Django is that you may not
+have access to some needed variables that are always included in Django
+templates.  Djangular includes an AngularJS module to help with that.
 
 + To use the AngularJS module that Djangular provides you, you'll need to add
   the djangular app to your projects URLs.
@@ -97,55 +142,73 @@ Configuration Changes Needed for Djangular
             ...
         )
 
-+ Djangular also includes a JSON Vulnerability middleware that AngularJS knows
-  how to process. To include this protection, add
-  `djangular.middleware.AngularJsonVulnerabilityMiddleware` to the
-  `MIDDLEWARE_CLASSES` setting. This only affects JSON requests (based on
-  Content-Type), so this can be located fairly low in the middleware stack.
+This will add a `djangular` AngularJS module to your front end code.  This
+module includes a `DjangoProperties` constant that includes whether the current
+user is authenticated, the username, groups and roles of the current user and
+the static and media urls from Django settings.  It also includes a `django`
+filter, which does some basic substitution based on the properties constant.
+
+
+Enforcing the end slashes of your AngularJS Resources
+-----------------------------------------------------
+
+$resource is a convenient way to create REST-like services in AngularJS.
+However, there currently
+[is a bug](https://github.com/angular/angular.js/issues/992) in $resource that
+will strip the ending slash, which means that $resource is unusable unless
+`settings.APPEND_SLASHES` is set to `FALSE`.
+
+Djangular used to patch this automatically, but it now includes a separate file
+(`djangular/static/js/resource_patch.js`) to handle this issue.  Simply include
+that javascript file in your page after you have loaded `angular-resource.js`
+and ending slashes will be preserved in $resource.
+
+
+Enabling CSRF protection in AngularJS Templates
+-----------------------------------------------
+
+Djangular includes a JSON Vulnerability middleware that AngularJS knows how to
+process. To include this protection, add
+`djangular.middleware.AngularJsonVulnerabilityMiddleware` to the
+`MIDDLEWARE_CLASSES` setting. This only affects JSON requests (based on
+Content-Type), so this can be located fairly low in the middleware stack.
 
         MIDDLEWARE_CLASSES = (
             ...
             'djangular.middleware.AngularJsonVulnerabilityMiddleware'
         )
 
+Once you have enabled CSRF protection in Django by adding the middleware
+`django.middleware.csrf.CsrfViewMiddleware` to the `MIDDLEWARE_CLASSES` setting,
+you may use the same protection in AngularJS templates in addition to Django
+template.  There are two different ways to enable this protection via djangular:
 
-Comparison between Djangular and Angular-Seed
----------------------------------------------
++ Make your main app dependent on the `djangular` module and use the included
+  `csrf-token` directive (that wraps the Django `csrf_token` template tag)
+  inside the appropriate `form` tags in your HTML.
 
-+ Each app has its own AngularJS "app" folder, with directories for CSS, JS,
-  images and partials supplied. As a result, the URLs for these get grouped into
-  the STATIC_URL structure of Django. So, each resource inside an AngularJS app
-  will have a `{{ STATIC URL }}/{{ app_name }}/` prefix.
-    * Note: Because of these URLs, referring to AngularJS content in a separate
-      app should use a `../<separate_app>/` URL. This will help significantly
-      during testing to make sure paths are correct.
-    * Note: It is recommended to namespace the AngularJS code the same name as the
-      Django app. The created JS files do this already.
-    * Example: If you have a Django app named `foo` and you are using the
-      default `STATIC_URL` in your settings, the main AngularJS module named
-      `foo` would be found at `/static/foo/js/app.js`.
+        // Inside your JavaScript
+        angular.module('myApp', ['djangular', ...]);
+        ...
+        <!-- In your AngularJS Template -->
+        <div ng-app="my-app">
+            ...
+            <form ...>
+                <csrf-token></csrf-token>
+            </form>
+        </div>
 
-+ Tests have moved from `test/` to `tests/`. There are `unit/` and `e2e/`
-  subdirectories where the Karma tests go.
++ Make your main app dependent on the `djangular.csrf`, which will add the
+  appropriate CSRF Token Header in all POSTs, PUTs and DELETEs.  Note that this
+  way is vulnerable to cross-site scripting if you make a post to a domain
+  outside your control.
 
-+ The `lib/` directory (containing the AngularJS code) has been moved to the
-  static folder of the Djangular app. This will use the normal Django static
-  urls: `{{ STATIC_URL }}/lib/angular/angular.js`
+        angular.module('myApp', ['djangular.csrf', ...]);
 
-+ The `config/` directory is now placed inside of your default Django site. Each
-  individual Django app doesn't need its own AngularJS or Karma config.
-
-+ The `scripts/` directory has been removed, because the Angular-Seed scripts
-  have been made into Django commands. These commands exist in the standard
-  `management/` directory.
-    * `makeangularsite` places the Karma configuration templates inside the
-      given Django Site directory. This should be run after installing
-      Djangular.
-    * `runtestserver` runs a local Django Web Server configured to support
-      running all e2e tests.
-    * `startangularapp` creates a Django app with the AngularJS structure.
-    * `testjs` runs the Karma Server for either the unit or e2e tests. Note that
-      the e2e tests requires the `runtestserver` to be running beforehand.
+If you allow a user to login (or logout) and don't redirect or reload the page,
+the tags and cookies provided by both methods above will be stale.  The second
+option (using the `djangular.csrf` module) provides a `UpdateCSRFToken` function
+that can be invoked with the new CSRF Token value.
 
 
 Using Djangular in your Django Project
@@ -189,7 +252,7 @@ for this JavaScript is `/djangular/app.js` (note that is not static).
 The following is a sample route config that uses the aforementioned djangular
 angular app. Because AngularJS has not set up the $filter directive during the
 route configuration, the DjangoProperties constant is the only way to obtain the
-STATIC_URL. Using 'sample' as the name of the Django/Angular JS app:
+STATIC_URL. Using 'sample' as the name of the Django/AngularJS app:
 
 ```javascript
 angular.module('sample', [
@@ -200,10 +263,10 @@ angular.module('sample', [
         function($routeProvider, DjangoProperties) {
             $routeProvider.when('/view1', {
                 templateUrl: DjangoProperties.STATIC_URL +
-                    'sample/partials/partial1.html', controller: 'MyCtrl1'});
+                    'sample/view1/view1.html', controller: 'View1Ctrl'});
             $routeProvider.when('/view2', {
                 templateUrl: DjangoProperties.STATIC_URL +
-                    'sample/partials/partial2.html', controller: 'MyCtrl2'});
+                    'sample/view2/view2.html', controller: 'View2Ctrl'});
             $routeProvider.otherwise({redirectTo: '/view1'});
         }
     ]);
@@ -264,7 +327,7 @@ The template (more or less) looks like the following:
     {% compressed_css app_name %}
 
     <!--AngularJS library imports-->
-    <script src="{{ STATIC_URL }}/lib/angular/angular-min.js"></script>
+    <script src="{{ STATIC_URL }}angular/angular-min.js"></script>
 
     <!--AngularJS app imports-->
     <script src="/djangular/app.js"></script>  <!-- The djangular app. -->
@@ -280,63 +343,3 @@ The template (more or less) looks like the following:
 </body>
 </html>
 ```
-
-Enforcing the end slashes of your Angular Resources
----------------------------------------------------
-
-$resource is a convenient way to create REST-like services in Angular.  However,
-there currently [is a bug](https://github.com/angular/angular.js/issues/992) in
-$resource that will strip the ending slash, which means that $resource is
-unusable unless `settings.APPEND_SLASHES` is set to `FALSE`.
-
-Djangular used to patch this automatically, but it now includes a separate file
-(`djangular/static/js/resource_patch.js`) to handle this issue.  Simply include
-that javascript file in your page after you have loaded `angular-resource.js`
-and ending slashes will be preserved in $resource.
-
-
-Enabling CSRF protection in AngularJS Templates
------------------------------------------------
-
-If you have enabled CSRF protection in Django by adding the middleware
-`django.middleware.csrf.CsrfViewMiddleware` to the `MIDDLEWARE_CLASSES` setting,
-you may use the same protection in AngularJS templates in addition to Django
-template.  There are two different ways to enable this protection via djangular:
-
-+ Make your main app dependent on the `djangular` module and use the included
-  `csrf-token` directive (that wraps the Django `csrf_token` template tag)
-  inside the appropriate `form` tags in your HTML.
-
-        // Inside your JavaScript
-        angular.module('myApp', ['djangular', ...]);
-        ...
-        <!-- In your Angular Template -->
-        <div ng-app="my-app">
-            ...
-            <form ...>
-                <csrf-token></csrf-token>
-            </form>
-        </div>
-
-+ Make your main app dependent on the `djangular.csrf`, which will add the
-  appropriate CSRF Token Header in all POSTs, PUTs and DELETEs.  Note that this
-  way is vulnerable to cross-site scripting if you make a post to a domain
-  outside your control.
-
-        angular.module('myApp', ['djangular.csrf', ...]);
-
-If you allow a user to login (or logout) and don't redirect or reload the page,
-the tags and cookies provided by both methods above will be stale.  The second
-option (using the `djangular.csrf` module) provides a `UpdateCSRFToken` function
-that can be invoked with the new CSRF Token value.
-
-Current Roadmap
----------------
-
-+ Better support for Django 1.6 and Angular 1.2.
-+ Auto-detection of node and karma installs.
-+ Providing additional synchronization between Django models and AngularJS's
-  $resource. This includes removing the patch for AngularJS's $resource, yet not
-  having to require Django's `FORCE_SLASHES` setting to be False.
-+ Using Django's ModelForms and Templates to provide an easy way to generate
-  AngularJS partials.
