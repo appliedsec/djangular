@@ -1,4 +1,4 @@
-from .base import TestAngularAppAsPythonModuleTest
+from .base import TestAngularSeedAsPythonModuleTest
 from .finders import *
 from .middleware import *
 from .storage import *
