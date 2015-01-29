@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='djangular',
-    version='0.2.7',
+    version='0.3.0b1',
     description="A reusable app that provides better app integration with AngularJS.",
     long_description="""
 A reusable app that provides better app integration with AngularJS.  Djangular
@@ -16,7 +16,7 @@ massive AngularJS application inside of Django.  This allows you to selectively
 use apps per site, as well as create a consistent structure across all of your
 Django apps.
 
-This is intended to be a Django version of the Angular-Seed project
+This is intended to be a Django version of the angular-seed project
 (https://github.com/angular/angular-seed).  The current mindset is to limit the
 amount of changes introduced by Djangular.
 """,
