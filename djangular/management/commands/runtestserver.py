@@ -6,6 +6,9 @@ class Command(mgmt.base.BaseCommand):
     args = runserver.Command.args
 
     def handle(self, addrport=runserver.DEFAULT_PORT, *args, **options):
+        self.stdout.write('This command is currently disabled.')
+        return
+
         # Hack on the test directories so that the e2e tests can be run.
         from django.conf import settings
         # TODO: Figure out why this prints twice...

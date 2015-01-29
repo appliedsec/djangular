@@ -71,6 +71,9 @@ class Command(utils.SiteAndPathUtils, mgmt.base.BaseCommand):
         return "%s\n\n%s" % (parent_usage, types_message)
 
     def handle(self, test_type=None, *args, **options):
+        self.stdout.write('This command is currently disabled.')
+        return
+
         self.verbosity = int(options.get('verbosity'))
         self.test_type = test_type or self.default_test_type
 

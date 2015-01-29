@@ -11,6 +11,9 @@ class Command(utils.SiteAndPathUtils, templates.TemplateCommand):
     option_list = base.BaseCommand.option_list
 
     def handle(self, site_name=None, target=None, *args, **options):
+        self.stdout.write('This command is currently disabled.')
+        return
+
         if site_name is None:
             site_name = self.get_default_site_app()
 
