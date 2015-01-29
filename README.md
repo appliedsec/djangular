@@ -24,6 +24,9 @@ Features
   that Django requires.
 + Improves security by enabling of CSRF protection and JSON Vulnerability
   between Django and AngularJS.
++ ~~Scripts to allow running JS Unit and E2E tests, similar to the Django test
+  command.~~ This was removed for the time being and will be (re-)included in a
+  future release.
 + Does not dictate how you use AngularJS inside your Django app.
 
 
