@@ -11,13 +11,13 @@ class Command(utils.SiteAndPathUtils, TemplateCommand):
             "name in the current directory or optionally in the given "
             "directory.")
 
-    if django.get_version() > "1.7":
+    if django.get_version() >= "1.7":
         requires_system_checks = False
     else:
         requires_model_validation = False
 
-    def handle(self, app_name=None, target=None, **options):
-        mgmt.call_command('startapp', app_name, target, **options)
+    def handle(self, name, target=None, **options):
+        mgmt.call_command('startapp', name, target, **options)
 
         # Override the options to setup the template command.
         options.update({
@@ -28,5 +28,5 @@ class Command(utils.SiteAndPathUtils, TemplateCommand):
         })
 
         super(Command, self).handle(
-            'app', app_name, target or app_name, **options)
+            'app', name, target or name, **options)
 
