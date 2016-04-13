@@ -1,7 +1,7 @@
 import django
 import os
 
-from . import base
+from djangular.tests.test_base import test_with_angularseed_template_as_django_app
 from djangular import finders
 from django.test import SimpleTestCase
 
@@ -9,7 +9,7 @@ APP_BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 
 
 class NamespacedAngularAppDirectoriesFinderTest(SimpleTestCase):
-    @base.test_with_angularseed_template_as_django_app
+    @test_with_angularseed_template_as_django_app
     def test_find(self):
         if django.get_version() >= '1.7':
             finder = finders.NamespacedAngularAppDirectoriesFinder(
@@ -27,7 +27,7 @@ class NamespacedAngularAppDirectoriesFinderTest(SimpleTestCase):
 
 class NamespacedE2ETestAppDirectoriesFinderTest(SimpleTestCase):
 
-    @base.test_with_angularseed_template_as_django_app
+    @test_with_angularseed_template_as_django_app
     def test_find(self):
         self.skipTest('E2E Testing is not implemented yet...')
 
