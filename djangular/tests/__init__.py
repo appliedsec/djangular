@@ -6,3 +6,4 @@ if django.VERSION < (1, 6):
     from djangular.tests.test_middleware import *
     from djangular.tests.test_storage import *
     from djangular.tests.test_utils import *
+    from djangular.tests.test_commands import *

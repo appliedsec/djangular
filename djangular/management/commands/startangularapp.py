@@ -29,4 +29,3 @@ class Command(utils.SiteAndPathUtils, TemplateCommand):
 
         super(Command, self).handle(
             'app', name, target or name, **options)
-
