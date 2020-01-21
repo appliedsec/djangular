@@ -347,3 +347,6 @@ The template (more or less) looks like the following:
 </body>
 </html>
 ```
+####  Examples ####
+Integegrate angular-js with django filter application : [here]
+[here] https://shriniket.home.blog/2019/09/22/integrate-angular-js-with-django-filter-application/
